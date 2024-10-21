@@ -6,7 +6,7 @@ import z from "zod";
 export async function registerForEvent(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/events/:eventId/attendees', {
+    .post('/events/:eventId/attendsees', {
       schema: {
         body: z.object({
           name: z.string().min(4),
