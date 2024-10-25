@@ -11,17 +11,17 @@ import { checkIn } from "./routes/check-in";
 import { getEventAttendees } from "./routes/get-event-attendees";
 import { errorHandler } from "./error-handler";
 import { fastifyCors } from "@fastify/cors";
-import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.DATABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+const app = fastify({ logger: true }).withTypeProvider<ZodTypeProvider>();
 
-if (!supabaseKey || !supabaseUrl) {
-  throw new Error("Missing SUPABASE_KEY or DATABASE_URL env variables");
+app.get('/', async () => {
+  return { hello: 'world' }
+})
+
+export default async function handler(req: any, res: any) {
+  await app.ready();
+  app.server.emit('request', req, res);
 }
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-export const app = fastify().withTypeProvider<ZodTypeProvider>();
 
 app.register(fastifyCors, {
   origin: "*",
@@ -55,7 +55,3 @@ app.register(checkIn)
 app.register(getEventAttendees)
 
 app.setErrorHandler(errorHandler)
-
-app
-  .listen({port : 3333, host: "0.0.0.0"})
-  .then(()=> console.log("Server is running on port 3333"))
