@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Event {
@@ -38,7 +39,7 @@ model CheckIn {
   createdAt DateTime @default(now()) @map("created_at")
 
   attendee   Attendee @relation(fields: [attendeeId], references: [id], onDelete: Cascade)
-  attendeeId Int @unique @map("attendee_id")
+  attendeeId Int      @unique @map("attendee_id")
 
   @@map("check_ins")
 }

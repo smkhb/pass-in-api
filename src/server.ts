@@ -1,3 +1,4 @@
+import 'dotenv/'
 import fastify from "fastify"
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUI from "@fastify/swagger-ui";
@@ -10,6 +11,15 @@ import { checkIn } from "./routes/check-in";
 import { getEventAttendees } from "./routes/get-event-attendees";
 import { errorHandler } from "./error-handler";
 import { fastifyCors } from "@fastify/cors";
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'https://ywdwpxklxjxqtmkmtlep.supabase.co'
+const supabaseKey = process.env.SUPABASE_KEY;
+if (!supabaseKey) {
+  throw new Error("SUPABASE_KEY is not defined in the environment variables");
+}
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>();
 
