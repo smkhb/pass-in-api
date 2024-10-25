@@ -12,16 +12,8 @@ import { getEventAttendees } from "./routes/get-event-attendees";
 import { errorHandler } from "./error-handler";
 import { fastifyCors } from "@fastify/cors";
 
-const app = fastify({ logger: true }).withTypeProvider<ZodTypeProvider>();
-
-app.get('/', async (req, res) => {
-  return res.status(200).send({ message: 'Hello World' });
-})
-
-export default async function handler(req: any, res: any) {
-  await app.ready();
-  app.server.emit('request', req, res);
-}
+export const app = fastify().withTypeProvider<ZodTypeProvider>();
+const PORT = Number(process.env.PORT) || 3333
 
 app.register(fastifyCors, {
   origin: "*",
@@ -55,3 +47,7 @@ app.register(checkIn)
 app.register(getEventAttendees)
 
 app.setErrorHandler(errorHandler)
+
+app
+  .listen({port: PORT, host: "0.0.0.0"})
+  .then(()=> console.log("Server is running on port 3333"))
