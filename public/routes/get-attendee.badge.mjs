@@ -1,6 +1,6 @@
 import {
   getAttendeeBagde
-} from "../chunk-P5FLML4O.mjs";
+} from "../chunk-LZUEHJYU.mjs";
 import "../chunk-JRO4E4TH.mjs";
 import "../chunk-5KVQPZKD.mjs";
 export {

@@ -1,19 +1,18 @@
-import { FastifyInstance } from "fastify";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { request } from "http";
-import z, { number } from "zod";
-import { prisma } from "../lib/prisma";
+import {
+  prisma
+} from "./chunk-5KVQPZKD.mjs";
 
-export async function getEventAttendees(app: FastifyInstance) {
-  app
-    .addHook('onRequest', async (request, reply) => {
-      const apiKey = request.headers['x-api-key'];
-      if (apiKey !== process.env.API_KEY) {
-        reply.status(403).send({ error: 'Acesso não autorizado' });
-      }
-    })
-    .withTypeProvider<ZodTypeProvider>()
-    .get('/events/:eventId/attendees', {
+// src/routes/get-event-attendees.ts
+import z from "zod";
+async function getEventAttendees(app) {
+  app.addHook("onRequest", async (request, reply) => {
+    const apiKey = request.headers["x-api-key"];
+    if (apiKey !== process.env.API_KEY) {
+      reply.status(403).send({ error: "Acesso n\xE3o autorizado" });
+    }
+  }).withTypeProvider().get(
+    "/events/:eventId/attendees",
+    {
       schema: {
         summary: "Aceesse os participantes de um evento",
         tags: ["Eventos"],
@@ -22,7 +21,7 @@ export async function getEventAttendees(app: FastifyInstance) {
         }),
         querystring: z.object({
           query: z.string().nullish(),
-          pageIndex: z.string().nullish().default('0').transform(Number),
+          pageIndex: z.string().nullish().default("0").transform(Number)
         }),
         response: {
           200: z.object({
@@ -38,13 +37,12 @@ export async function getEventAttendees(app: FastifyInstance) {
           })
         }
       }
-    },async (request, reply) => {
-      const { eventId } = request.params
-      const { pageIndex, query } = request.query
-
-
+    },
+    async (request, reply) => {
+      const { eventId } = request.params;
+      const { pageIndex, query } = request.query;
       const attendees = await prisma.attendee.findMany({
-        select:{
+        select: {
           id: true,
           email: true,
           name: true,
@@ -60,25 +58,28 @@ export async function getEventAttendees(app: FastifyInstance) {
           name: {
             contains: query
           }
-        } : {eventId},
+        } : { eventId },
         take: 10,
         skip: pageIndex * 10,
         orderBy: {
-          createAt: 'desc'
+          createAt: "desc"
         }
-      })
-
-      return reply.status(200).send({ 
-        attendees: attendees.map(attendee => {
+      });
+      return reply.status(200).send({
+        attendees: attendees.map((attendee) => {
           return {
             id: attendee.id,
             email: attendee.email,
             name: attendee.name,
             createAt: attendee.createAt,
             checkInAt: attendee.checkIn?.createdAt ?? null
-          }
+          };
         })
-      })
+      });
     }
-  )
+  );
 }
+
+export {
+  getEventAttendees
+};

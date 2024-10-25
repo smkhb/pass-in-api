@@ -11,7 +11,6 @@ import { checkIn } from "./routes/check-in";
 import { getEventAttendees } from "./routes/get-event-attendees";
 import { errorHandler } from "./error-handler";
 import { fastifyCors } from "@fastify/cors";
-import { verifyApiKey } from './middlewares/verify-api-key';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>();
 const PORT = Number(process.env.PORT) || 3333
@@ -40,12 +39,12 @@ app.register(fastifySwaggerUI, {
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
-app.register(createEvent, { preHandler: verifyApiKey })
-app.register(registerForEvent, { preHandler: verifyApiKey })
-app.register(getEvent, { preHandler: verifyApiKey })
-app.register(getAttendeeBagde, { preHandler: verifyApiKey })
-app.register(checkIn, { preHandler: verifyApiKey })
-app.register(getEventAttendees, { preHandler: verifyApiKey })
+app.register(createEvent)
+app.register(registerForEvent)
+app.register(getEvent)
+app.register(getAttendeeBagde)
+app.register(checkIn)
+app.register(getEventAttendees)
 
 app.setErrorHandler(errorHandler)
 

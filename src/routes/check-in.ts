@@ -1,12 +1,17 @@
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { request } from "http";
 import z from "zod";
 import { prisma } from "../lib/prisma";
 import { BadRequest } from "./_errors/bad-request";
 
 export async function checkIn(app: FastifyInstance) {
   app
+    .addHook('onRequest', async (request, reply) => {
+      const apiKey = request.headers['x-api-key'];
+      if (apiKey !== process.env.API_KEY) {
+        reply.status(403).send({ error: 'Acesso não autorizado' });
+      }
+    })
     .withTypeProvider<ZodTypeProvider>()
     .get('/attendee/:attendeeId/check-in', {
       schema: {

@@ -1,29 +1,26 @@
 import {
   getEvent
-} from "./chunk-JAAOKJEF.mjs";
+} from "./chunk-CEKGAX7F.mjs";
 import {
   registerForEvent
-} from "./chunk-742MKAZU.mjs";
+} from "./chunk-6HVBX7LD.mjs";
 import {
   errorHandler
 } from "./chunk-AT4G47H6.mjs";
 import {
-  verifyApiKey
-} from "./chunk-6CETEOFJ.mjs";
-import {
   checkIn
-} from "./chunk-TVPPNWJD.mjs";
+} from "./chunk-J26G7K6G.mjs";
 import {
   createEvent
-} from "./chunk-QAKUUNFW.mjs";
+} from "./chunk-LR26R3DH.mjs";
 import "./chunk-2WNLK7IH.mjs";
 import {
   getAttendeeBagde
-} from "./chunk-P5FLML4O.mjs";
+} from "./chunk-LZUEHJYU.mjs";
 import "./chunk-JRO4E4TH.mjs";
 import {
   getEventAttendees
-} from "./chunk-3PV4ETUD.mjs";
+} from "./chunk-QBRWWLOH.mjs";
 import "./chunk-5KVQPZKD.mjs";
 
 // src/server.ts
@@ -55,12 +52,12 @@ app.register(fastifySwaggerUI, {
 });
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
-app.register(createEvent, { preHandler: verifyApiKey });
-app.register(registerForEvent, { preHandler: verifyApiKey });
-app.register(getEvent, { preHandler: verifyApiKey });
-app.register(getAttendeeBagde, { preHandler: verifyApiKey });
-app.register(checkIn, { preHandler: verifyApiKey });
-app.register(getEventAttendees, { preHandler: verifyApiKey });
+app.register(createEvent);
+app.register(registerForEvent);
+app.register(getEvent);
+app.register(getAttendeeBagde);
+app.register(checkIn);
+app.register(getEventAttendees);
 app.setErrorHandler(errorHandler);
 app.listen({ port: PORT, host: "0.0.0.0" }).then(() => console.log("Server is running on port 3333"));
 export {

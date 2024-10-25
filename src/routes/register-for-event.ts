@@ -6,6 +6,12 @@ import { BadRequest } from "./_errors/bad-request";
 
 export async function registerForEvent(app: FastifyInstance) {
   app
+    .addHook('onRequest', async (request, reply) => {
+      const apiKey = request.headers['x-api-key'];
+      if (apiKey !== process.env.API_KEY) {
+        reply.status(403).send({ error: 'Acesso não autorizado' });
+      }
+    })
     .withTypeProvider<ZodTypeProvider>()
     .post('/events/:eventId/attendees', {
       schema: {
