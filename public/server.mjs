@@ -1,7 +1,4 @@
 import {
-  getEvent
-} from "./chunk-CEKGAX7F.mjs";
-import {
   registerForEvent
 } from "./chunk-6HVBX7LD.mjs";
 import {
@@ -17,10 +14,13 @@ import "./chunk-2WNLK7IH.mjs";
 import {
   getAttendeeBagde
 } from "./chunk-LZUEHJYU.mjs";
-import "./chunk-JRO4E4TH.mjs";
 import {
   getEventAttendees
 } from "./chunk-QBRWWLOH.mjs";
+import {
+  getEvent
+} from "./chunk-CEKGAX7F.mjs";
+import "./chunk-JRO4E4TH.mjs";
 import "./chunk-5KVQPZKD.mjs";
 
 // src/server.ts

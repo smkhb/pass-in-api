@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch --env-file .env src/server.ts",
     "build": "tsup src --format esm --out-dir public",
-    "start": "node public/server.mjs"
+    "start": "node -env-file .env public/server.mjs"
   },
   "keywords": [],
   "author": "",
