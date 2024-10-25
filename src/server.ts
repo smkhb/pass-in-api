@@ -12,15 +12,27 @@ import { getEventAttendees } from "./routes/get-event-attendees";
 import { errorHandler } from "./error-handler";
 import { fastifyCors } from "@fastify/cors";
 
+import fastifyExpress from '@fastify/express';
+
 const app = fastify({ logger: true }).withTypeProvider<ZodTypeProvider>();
 
-app.get('/', async () => {
-  return { hello: 'world' }
-})
+async function buildServer() {
+  // Registra o plugin Express
+  await app.register(fastifyExpress);
+
+  // Configura as rotas usando Fastify
+  app.get('/', async (request, reply) => {
+    return { hello: 'world' };
+  });
+
+  // Retorna o servidor Express
+  return app;
+}
 
 export default async function handler(req: any, res: any) {
-  await app.ready();
-  app.server.emit('request', req, res);
+  const fastifyServer = await buildServer();
+  await fastifyServer.ready();
+  fastifyServer.express( req, res);
 }
 
 app.register(fastifyCors, {
