@@ -1,4 +1,4 @@
-import 'dotenv/'
+import 'dotenv/config'
 import fastify from "fastify"
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUI from "@fastify/swagger-ui";
@@ -13,13 +13,13 @@ import { errorHandler } from "./error-handler";
 import { fastifyCors } from "@fastify/cors";
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'https://ywdwpxklxjxqtmkmtlep.supabase.co'
+const supabaseUrl = process.env.DATABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
-if (!supabaseKey) {
-  throw new Error("SUPABASE_KEY is not defined in the environment variables");
+
+if (!supabaseKey || !supabaseUrl) {
+  throw new Error("Missing SUPABASE_KEY or DATABASE_URL env variables");
 }
 const supabase = createClient(supabaseUrl, supabaseKey);
-
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -30,8 +30,8 @@ app.register(fastifyCors, {
 app.register(fastifySwagger, {
   swagger: {
     info: {
-      title: "Event Management",
-      description: "Event Management API",
+      title: "API Para Gestão de Eventos",
+      description: "Essa é uma API para gestão de eventos, que pode ser utilizada para criar eventos, registrar participantes, fazer check-in e gerar crachás.",
       version: "0.1.0",
     },
     consumes: ["application/json"],
@@ -41,7 +41,7 @@ app.register(fastifySwagger, {
 })
 
 app.register(fastifySwaggerUI, {
-  routePrefix: "/docs",
+  routePrefix: "/",
 })
 
 app.setValidatorCompiler(validatorCompiler);

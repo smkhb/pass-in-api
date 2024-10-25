@@ -10,8 +10,8 @@ export async function getAttendeeBagde(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .get('/attendee/:attendeeId/bagde', {
       schema: {
-        summary: "Get attendee badge",
-        tags: ["attendees"],
+        summary: "Acesse o crachá de um participante",
+        tags: ["Participantes"],
         params: z.object({
           attendeeId: z.coerce.number().int()
         }),
