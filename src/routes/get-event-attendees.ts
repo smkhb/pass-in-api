@@ -34,7 +34,7 @@ export async function getEventAttendees(app: FastifyInstance) {
                 createAt: z.date(),
                 checkInAt: z.date().nullable()
               })
-            )
+            ), total: z.number()
           })
         }
       }
@@ -42,31 +42,40 @@ export async function getEventAttendees(app: FastifyInstance) {
       const { eventId } = request.params
       const { pageIndex, query } = request.query
 
-
-      const attendees = await prisma.attendee.findMany({
-        select:{
-          id: true,
-          email: true,
-          name: true,
-          createAt: true,
-          checkIn: {
-            select: {
-              createdAt: true
+      const [attendees, total] = await Promise.all([
+        prisma.attendee.findMany({
+          select:{
+            id: true,
+            email: true,
+            name: true,
+            createAt: true,
+            checkIn: {
+              select: {
+                createdAt: true
+              }
             }
+          },
+          where: query ? {
+            eventId,
+            name: {
+              contains: query
+            }
+          } : {eventId},
+          take: 10,
+          skip: pageIndex * 10,
+          orderBy: {
+            createAt: 'desc'
           }
-        },
-        where: query ? {
-          eventId,
-          name: {
-            contains: query
-          }
-        } : {eventId},
-        take: 10,
-        skip: pageIndex * 10,
-        orderBy: {
-          createAt: 'desc'
-        }
-      })
+        }),
+        prisma.attendee.count({
+          where: query? {
+            eventId,
+            name: {
+              contains: query,
+            }
+          } : {eventId}
+        })
+      ])
 
       return reply.status(200).send({ 
         attendees: attendees.map(attendee => {
@@ -77,8 +86,8 @@ export async function getEventAttendees(app: FastifyInstance) {
             createAt: attendee.createAt,
             checkInAt: attendee.checkIn?.createdAt ?? null
           }
-        })
+        }), 
+        total,
       })
-    }
-  )
+    })
 }
